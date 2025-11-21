@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-# from matplotlib.animation import FuncAnimation
 import pandas as pd
 import numpy as np
 from math import log
@@ -173,7 +172,7 @@ class Simulation:
             delta = np.abs(self.lambda_eq - ilambda) # distance from the equilibrium position of the ligand
             kr = self.kr0 * np.exp(self.gamma_bond * self.spring * delta/(kb*self.temp)) # spring constant of the bond
             p_r = 1-np.exp(-kr*self.dt) # probability of breaking the bond
-            print(p_r)
+             # print(p_r)
             
             if (np.random.rand() < p_r): # break the bond with probability p_r
                 self.continueSim = False
