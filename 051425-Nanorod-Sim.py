@@ -1,11 +1,9 @@
 import matplotlib.pyplot as plt
-# from matplotlib.animation import FuncAnimation
 import pandas as pd
 import numpy as np
 from math import log
 from matplotlib.widgets import RangeSlider
 from matplotlib import cm
-# import sys
 from pathlib import Path
 import time
 import os
