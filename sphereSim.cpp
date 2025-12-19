@@ -83,7 +83,7 @@
 
 constexpr double kb = 1.380649e-23; // Boltzmann constant (J/K)
 
-// helper code
+
 namespace {
     std::mt19937 &rng() {
         static std::mt19937 gen(std::random_device{}());
@@ -122,7 +122,7 @@ namespace {
         // Apply incremental rotation on the left (same idea as your Python code)
         return R * rmatrix;
     }
-} // namespace
+} 
 
 // class: SphereSim
 class SphereSim {
@@ -167,7 +167,7 @@ public:
     Eigen::Vector3d wvar_diag;
     Eigen::Vector3d thwcorr_diag;
 
-    // Minimal constructor
+    // constructor
     SphereSim(double dt_, int steps_, double temp_,
               double rho_, double mu_, double d_)
         : dt(dt_), steps(steps_), temp(temp_), rho(rho_), mu(mu_), d(d_) {
@@ -230,7 +230,7 @@ void SphereSim::particleData() {
     rmatrix = Eigen::Matrix3d::Identity();
     spring  = 1.0; // spring constant
 
-    // ---- translational kinematics data ----
+    // translational kinematics data
     // self.bdt = self.beta0*self.dt
     bdt_diag = beta0_diag * dt;
 
