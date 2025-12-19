@@ -25,3 +25,30 @@
 //     ''''''
 // #runSim(spheresim)
 // #runSim(cylindersim)
+
+#include <string>
+
+struct Simulation {
+    std::string mode;                 
+    void generateData();
+    void saveSim();
+    void updateProgress(const std::string& msg);
+};
+
+void runSim(Simulation& sim);
+void graphSim(Simulation& sim);
+
+void main_sim(Simulation& sim) {
+    if (sim.mode == "save") {
+        runSim(sim);
+    } else if (sim.mode == "show") {
+        graphSim(sim);
+    }
+}
+
+
+void runSim(Simulation& sim) {
+    sim.generateData();
+    sim.updateProgress("data generated");
+    sim.saveSim();
+}
