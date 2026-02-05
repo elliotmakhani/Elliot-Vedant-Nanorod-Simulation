@@ -351,7 +351,7 @@ void SphereSim::next_data() {
 
     // self.iw = e(-brdt) @ iw + randomw
     iw = (exp_neg_brdt * iw.array()).matrix() + randomw;
-
+    // sphere sim edit
     // self.rmatrix = rotateMatrix(dth, self.rmatrix)
     // self.ior = self.rmatrix @ self.upright
     rmatrix = rotateMatrix(dth, rmatrix);
