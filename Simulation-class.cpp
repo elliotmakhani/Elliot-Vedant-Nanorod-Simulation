@@ -262,3 +262,100 @@
 //               self.updateProgress(progress_message)
 
                   
+#include <Eigen/Dense>
+#include <vector>
+#include <cmath>
+#include <iostream>
+#include <filesystem>
+namespace fs = std::filesystem;
+
+class Simulation {
+public:
+    std::string type;
+    double dt; // s
+    int datadt; // int representing the number of steps between data points
+    int steps;
+    int laststep;
+    double totalt; // s
+    double temp; // K
+    double rho; // density, kg/m^3
+    double mu; // viscosity, N*s/m^2
+    double d; // diameter, m
+    double l;
+    Eigen::Vector3d ir; // position vector
+    Eigen::Vector3d iv; // velocity vector
+    Eigen::Vector2d ith; // theta, z
+    Eigen::Vector3d iw; // angular velocity vector
+    Eigen::MatrixXd positions; // all positions
+    Eigen::MatrixXd velocities; // all velocities
+    Eigen::MatrixXd thetaz; // all thetas
+    Eigen::MatrixXd orientations; // all orientations
+    Eigen::MatrixXd omegas; // all omegas
+    Eigen::MatrixXd omegasobjframe; // all omegas in object frame
+    Eigen::VectorXd sqdis; // squared displacements
+    Eigen::VectorXd sqangdis; // squared angular displacements
+    std::vector<std::pair<double, double>> squared_displacement; // combined squared displacements
+    Eigen::VectorXd times;
+    double dsize;
+    int nbins;
+    std::string mode; // either 'show' or 'save'
+    std::string dir;
+    int res;
+    std::string name;
+    
+
+    Simulation(double dt, int datadt, int steps, double temp, double rho, double mu, double d, double dsize, int nbins, std::string mode = "show", std::string dir = "", int res = -1, std::string name = ""): dt(dt), datadt(datadt), steps(steps), temp(temp), rho(rho), mu(mu), d(d), dsize(dsize), nbins(nbins), mode(mode), dir(dir), res(res), name(name) {
+        totalt = dt * steps; // s
+        laststep = steps;
+        ir = Eigen::Vector3d::Zero(); // position vector
+        iv = Eigen::Vector3d::Zero(); // velocity vector
+        ith = Eigen::Vector2d::Zero(); // theta, z
+        iw = Eigen::Vector3d::Zero(); // angular velocity vector
+        positions = Eigen::MatrixXd::Zero(steps + 1, 3);
+        positions.row(0) = ir;
+        velocities = Eigen::MatrixXd::Zero(steps + 1, 3);
+        velocities.row(0) = iv;
+        thetaz = Eigen::MatrixXd::Zero(steps + 1, 2);
+        thetaz.row(0) = ith;
+        orientations = Eigen::MatrixXd::Zero(steps + 1, 3);
+        orientations.row(0) = Eigen::Vector3d(1.0, 0.0, 0.0);
+        omegas = Eigen::MatrixXd::Zero(steps + 1, 3);
+        omegasobjframe = Eigen::MatrixXd::Zero(steps + 1, 3);
+        omegas.row(0) = iw;
+        sqdis = Eigen::VectorXd::Zero(steps + 1); // squared displacements
+        sqangdis = Eigen::VectorXd::Zero(steps + 1); // squared angular displacements
+        squared_displacement.push_back(std::make_pair(sqdis(0), sqangdis(0)));
+        times = Eigen::VectorXd::LinSpaced(steps + 1, 0, totalt);
+        if (!dir.empty() && dir.back() != '/') {
+            dir += '/';
+        }
+        if (res == -1) {
+            this->res = steps;
+        }
+    }
+    void makeFolder(){
+        if (mode == "save") {
+            int i = 1;
+            std::string full_path = dir;
+            full_path /= name + type;
+            while (true) {                
+                try {
+                    if(fs::create_directory(full_path)) {
+                        break;
+                    } else {
+                        throw std::runtime_error("Directory already exists");
+                    }
+                } catch (std::runtime_error& e) {
+                    i += 1;
+                    full_path = dir;
+                    full_path /= name + type + "v" + std::to_string(i);
+                }
+            }
+            // Write parameters to file logic here
+        }
+    }
+    void particleData();
+    void next_data();
+    void generateData();
+    void saveSim();
+};
