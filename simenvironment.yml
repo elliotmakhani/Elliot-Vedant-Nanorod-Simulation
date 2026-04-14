@@ -1,0 +1,12 @@
+name: simenv
+channels:
+  - defaults
+dependencies:
+  - python=3.14
+  - numpy
+  - eigen
+  - gcc
+  - gxx
+  - pandas
+  - plotly
+prefix: /data/homezvol3/vedanth/miniconda3/envs/simenv
